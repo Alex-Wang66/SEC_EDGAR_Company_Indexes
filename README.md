@@ -1,4 +1,4 @@
-# SEC EDGAR Company Filing Indexes
+# SEC EDGAR 公司财报索引数据处理系统
 
 <div align="center">
 
@@ -6,109 +6,109 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Data Source: SEC EDGAR](https://img.shields.io/badge/Data-SEC%20EDGAR-green)](https://www.sec.gov/cgi-bin/browse-edgar)
 
-A comprehensive data engineering solution for fetching, parsing, and processing SEC EDGAR company filing index data.
+一个完整的数据工程解决方案，用于获取、解析和处理美国SEC EDGAR公司财报索引数据。
 
-[Features](#features) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Architecture](#architecture)
+[功能](#功能) • [快速开始](#快速开始) • [文档](#文档) • [架构](#架构)
 
 </div>
 
 ---
 
-## Overview
+## 项目概述
 
-This project provides a **production-ready data pipeline** for collecting and processing SEC EDGAR company filing indexes from the [SEC's official database](https://www.sec.gov/Archives/edgar/full-index/).
+本项目提供一个**生产级数据管道**，用于从[SEC官方数据库](https://www.sec.gov/Archives/edgar/full-index/)采集和处理SEC EDGAR公司财报索引数据。
 
-**What it does:**
-- 📥 Automatically downloads quarterly company filing indexes from SEC
-- 🔍 Parses structured data from SEC index files (tab-separated format)
-- 🧹 Cleans, deduplicates, and processes the data
-- 💾 Exports to multiple formats (Parquet, CSV, JSON)
-- 📊 Generates comprehensive statistics and metadata
+**项目功能：**
+- 📥 自动从SEC下载季度公司财报索引
+- 🔍 解析SEC索引文件中的结构化数据（制表符分隔格式）
+- 🧹 清洗、去重、处理数据
+- 💾 导出多种格式（Parquet、CSV、JSON）
+- 📊 生成综合统计信息和元数据
 
-**Key Characteristics:**
-- **Real Data**: Uses authentic SEC EDGAR data
-- **Scalable**: Handles 10,000+ company records
-- **Modular**: Clean separation of download, parse, and process logic
-- **Configurable**: YAML/environment-based configuration
-- **Resumable**: Can skip download and process existing files
-- **Well-Documented**: Comprehensive code and usage documentation
-
----
-
-## Features
-
-### ✨ Core Capabilities
-
-| Feature | Description |
-|---------|-------------|
-| **Automated Download** | Fetches company.idx files from SEC servers with rate limiting |
-| **Format Parsing** | Handles variable-width SEC index file format |
-| **Data Cleaning** | Removes duplicates, handles missing values, normalizes whitespace |
-| **Deduplication** | Keeps latest filing per company based on filing date |
-| **Multi-Format Export** | Saves as Parquet (efficient), CSV (universal), or JSON |
-| **Logging & Monitoring** | Structured logging for pipeline transparency |
-| **CLI Interface** | Command-line tools for batch processing |
-
-### 📈 Data Processing Pipeline
-
-```
-SEC EDGAR Website
-       ↓
-   Download (company.idx files per quarter)
-       ↓
-   Parse (structured extraction from index format)
-       ↓
-   Clean (whitespace, empty rows, date conversion)
-       ↓
-   Deduplicate (latest filing per company)
-       ↓
-   Export (Parquet/CSV/JSON)
-```
+**核心特性：**
+- **真实数据**：使用正式的SEC EDGAR数据
+- **高可扩展性**：处理10,000+条公司记录
+- **模块化设计**：下载、解析、处理逻辑清晰分离
+- **可配置**：基于环境变量和配置文件
+- **可续传**：支持跳过下载直接处理现有文件
+- **文档完善**：代码和使用文档齐全
 
 ---
 
-## Quick Start
+## 功能特性
 
-### Installation
+### ✨ 核心功能
 
-1. **Clone the repository**
+| 功能 | 描述 |
+|------|------|
+| **自动下载** | 从SEC服务器获取company.idx文件，支持速率限制 |
+| **格式解析** | 处理SEC特有的可变宽度索引文件格式 |
+| **数据清洗** | 删除重复项、处理缺失值、规范化空白字符 |
+| **去重处理** | 按文件日期保留每家公司的最新财报 |
+| **多格式导出** | 支持Parquet（高效）、CSV（通用）、JSON格式 |
+| **日志监控** | 结构化日志提供管道执行的完整透视 |
+| **命令行工具** | 提供命令行接口用于批处理 |
+
+### 📈 数据处理流程
+
+```
+SEC EDGAR 官方网站
+       ↓
+   下载 (按季度下载company.idx文件)
+       ↓
+   解析 (从索引格式提取结构化数据)
+       ↓
+   清洗 (处理空白、空行、日期转换)
+       ↓
+   去重 (每家公司保留最新财报)
+       ↓
+   导出 (Parquet/CSV/JSON格式)
+```
+
+---
+
+## 快速开始
+
+### 安装步骤
+
+1. **克隆仓库**
    ```bash
    git clone https://github.com/Alex-Wang66/SEC_EDGAR_Company_Indexes.git
    cd SEC_EDGAR_Company_Indexes
    ```
 
-2. **Create a Python virtual environment**
+2. **创建Python虚拟环境**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate  # Windows系统: venv\Scripts\activate
    ```
 
-3. **Install dependencies**
+3. **安装依赖**
    ```bash
    pip install -r requirements.txt
    ```
 
-### Basic Usage
+### 基本用法
 
-#### Via Command Line
+#### 命令行使用
 
 ```bash
-# Download 2023-2024 data and save as Parquet
+# 下载2023-2024年数据并保存为Parquet格式
 python run_pipeline.py --start-year 2023 --end-year 2024
 
-# Process existing files only (skip download)
+# 只处理现有文件（跳过下载），导出为CSV
 python run_pipeline.py --skip-download --format csv
 
-# Download with verbose logging
+# 启用详细日志下载数据
 python run_pipeline.py --start-year 2023 --verbose
 ```
 
-#### Via Python Code
+#### Python代码调用
 
 ```python
 from src.sec_edgar.main import SECEDGARPipeline
 
-# Create and run pipeline
+# 创建并运行管道
 pipeline = SECEDGARPipeline()
 results = pipeline.run(
     start_year=2023,
@@ -117,140 +117,140 @@ results = pipeline.run(
     output_format="parquet"
 )
 
-print(f"Output: {results['output_file']}")
-print(f"Records: {results['stages']['process']['records']:,}")
+print(f"输出文件: {results['output_file']}")
+print(f"记录数: {results['stages']['process']['records']:,}")
 ```
 
-### Output Example
+### 输出示例
 
 ```
-SEC EDGAR Data Pipeline Started
+SEC EDGAR 数据管道已启动
 ============================================================
 
-[Stage 1/3] Downloading SEC EDGAR index files...
-✓ Downloaded 8 files
+[阶段 1/3] 下载SEC EDGAR索引文件...
+✓ 已下载 8 个文件
 
-[Stage 2/3] Parsing company index files...
-✓ Parsed 47,233 records
+[阶段 2/3] 解析公司索引文件...
+✓ 已解析 47,233 条记录
 
-[Stage 3/3] Processing and cleaning data...
-✓ Processed 12,456 final records
+[阶段 3/3] 处理和清洗数据...
+✓ 已处理 12,456 条最终记录
 
-Saving results as PARQUET...
-✓ Saved to: data/processed/company_files_20240607_154523.parquet
+保存结果为 PARQUET 格式...
+✓ 已保存到: data/processed/company_files_20240607_154523.parquet
 
 ============================================================
-SEC EDGAR Data Pipeline Completed Successfully
+SEC EDGAR 数据管道执行完成
 
-Pipeline Summary:
-  Output: data/processed/company_files_20240607_154523.parquet
-  Total records: 12,456
-  Unique companies: 5,234
-  Form types: 42
+管道摘要:
+  输出文件: data/processed/company_files_20240607_154523.parquet
+  总记录数: 12,456
+  独立公司数: 5,234
+  表单类型: 42
 ```
 
 ---
 
-## Architecture
+## 项目架构
 
-### Project Structure
+### 项目结构
 
 ```
 SEC_EDGAR_Company_Indexes/
-├── src/sec_edgar/              # Main package
-│   ├── __init__.py             # Package initialization
-│   ├── config.py               # Configuration management
-│   ├── downloader.py           # SEC EDGAR downloader (SECDownloader class)
-│   ├── parser.py               # Index file parser (SECIndexParser class)
-│   ├── processor.py            # Data processor (DataProcessor class)
-│   └── main.py                 # Pipeline orchestrator (SECEDGARPipeline class)
+├── src/sec_edgar/              # 核心代码包
+│   ├── __init__.py             # 包初始化
+│   ├── config.py               # 配置管理
+│   ├── downloader.py           # SEC EDGAR下载器 (SECDownloader类)
+│   ├── parser.py               # 索引文件解析器 (SECIndexParser类)
+│   ├── processor.py            # 数据处理器 (DataProcessor类)
+│   └── main.py                 # 管道编排器 (SECEDGARPipeline类)
 ├── data/
-│   ├── raw/                    # Downloaded .idx files
-│   └── processed/              # Output files (Parquet/CSV/JSON)
-├── logs/                       # Pipeline logs
-├── tests/                      # Unit tests
-├── run_pipeline.py             # CLI entry point
-├── setup.py                    # Package setup
-├── requirements.txt            # Dependencies
-├── README.md                   # This file
-├── USAGE.md                    # Detailed usage guide
-├── DATA_FORMAT.md              # Data format specification
-├── CHANGELOG.md                # Version history
-└── LICENSE                     # MIT License
+│   ├── raw/                    # 下载的.idx文件
+│   └── processed/              # 输出文件 (Parquet/CSV/JSON)
+├── logs/                       # 管道日志
+├── tests/                      # 单元测试
+├── run_pipeline.py             # CLI入口点
+├── setup.py                    # 包设置
+├── requirements.txt            # 依赖清单
+├── README.md                   # 本文件
+├── USAGE.md                    # 详细使用指南
+├── DATA_FORMAT.md              # 数据格式规范
+├── CHANGELOG.md                # 版本历史
+└── LICENSE                     # MIT许可证
 ```
 
-### Core Components
+### 核心组件
 
 #### 1. **SECDownloader** (`downloader.py`)
-Downloads quarterly company.idx files from SEC
-- Respects SEC's rate limiting guidelines (0.2s between requests)
-- Handles network errors gracefully
-- Returns download statistics
+从SEC下载季度公司索引文件
+- 遵守SEC速率限制指南（请求间隔0.2秒）
+- 优雅处理网络错误
+- 返回下载统计信息
 
 #### 2. **SECIndexParser** (`parser.py`)
-Parses SEC's fixed-width index file format
-- Skips header rows (first 10 lines)
-- Extracts: Company Name, Form Type, CIK, Date, Filename
-- Handles variable-length company names
+解析SEC固定宽度索引文件格式
+- 跳过头部行（前10行）
+- 提取：公司名称、表单类型、CIK、日期、文件名
+- 处理可变长度公司名称
 
 #### 3. **DataProcessor** (`processor.py`)
-Cleans and transforms raw data
-- Removes duplicates by keeping latest filing date
-- Normalizes whitespace
-- Converts date strings to datetime objects
-- Generates statistics
+清洗和转换原始数据
+- 按最新文件日期删除重复项
+- 规范化空白字符
+- 将日期字符串转换为datetime对象
+- 生成统计信息
 
 #### 4. **SECEDGARPipeline** (`main.py`)
-Orchestrates the complete workflow
-- Manages logging and error handling
-- Saves results in multiple formats
-- Provides progress reporting
+编排完整工作流
+- 管理日志和错误处理
+- 保存多种格式的结果
+- 提供进度报告
 
 ---
 
-## Usage Guide
+## 使用指南
 
-### Command Line Options
+### 命令行选项
 
 ```
-usage: run_pipeline.py [-h] [--start-year START_YEAR] 
-                       [--end-year END_YEAR] [--skip-download]
-                       [--format {parquet,csv,json}] [--verbose]
+用法: run_pipeline.py [-h] [--start-year START_YEAR] 
+                      [--end-year END_YEAR] [--skip-download]
+                      [--format {parquet,csv,json}] [--verbose]
 
-options:
-  --start-year START_YEAR    Starting year (default: 2023)
-  --end-year END_YEAR        Ending year (default: current year)
-  --skip-download            Skip download, process existing files
-  --format {parquet,csv,json}  Output format (default: parquet)
-  --verbose                  Enable debug logging
+可选项:
+  --start-year START_YEAR    起始年份 (默认: 2023)
+  --end-year END_YEAR        截止年份 (默认: 当前年份)
+  --skip-download            跳过下载，处理现有文件
+  --format {parquet,csv,json}  输出格式 (默认: parquet)
+  --verbose                  启用详细日志
 ```
 
-### Configuration
+### 配置
 
-Edit `src/sec_edgar/config.py` to customize:
-- SEC EDGAR base URL
-- Default year range
-- Request delay and timeout
-- Output directory paths
-- Logging settings
+编辑 `src/sec_edgar/config.py` 自定义：
+- SEC EDGAR基础URL
+- 默认年份范围
+- 请求延迟和超时
+- 输出目录路径
+- 日志设置
 
-See [USAGE.md](USAGE.md) for detailed examples.
+详细示例见 [USAGE.md](USAGE.md)。
 
 ---
 
-## Data Format
+## 数据格式
 
-The output files contain the following fields:
+输出文件包含以下字段：
 
-| Column | Type | Description |
-|--------|------|-------------|
-| Company Name | str | Official company name as filed with SEC |
-| Form Type | str | SEC form type (e.g., 10-K, 10-Q, 8-K) |
-| CIK | str | Central Index Key - unique company identifier |
-| Date Filed | datetime | Filing submission date |
-| Filename | str | Path to filing document on SEC servers |
+| 列名 | 类型 | 描述 |
+|-----|------|------|
+| Company Name | 字符串 | 向SEC报备的官方公司名称 |
+| Form Type | 字符串 | SEC表单类型 (如 10-K, 10-Q, 8-K) |
+| CIK | 字符串 | 中央索引键 - 公司唯一标识符 |
+| Date Filed | 日期时间 | 文件提交日期 |
+| Filename | 字符串 | SEC服务器上的文件路径 |
 
-**Example Record:**
+**示例记录：**
 ```json
 {
   "Company Name": "Apple Inc.",
@@ -261,61 +261,61 @@ The output files contain the following fields:
 }
 ```
 
-See [DATA_FORMAT.md](DATA_FORMAT.md) for complete specification.
+完整规范见 [DATA_FORMAT.md](DATA_FORMAT.md)。
 
 ---
 
-## Performance Characteristics
+## 性能特征
 
-| Metric | Value |
-|--------|-------|
-| **Download Speed** | ~2 files/min (respects SEC rate limits) |
-| **Parse Speed** | ~10,000 records/sec |
-| **Memory Usage** | ~500MB for 50,000 records |
-| **File Sizes** | Parquet (~15MB), CSV (~60MB) for 50,000 records |
+| 指标 | 数值 |
+|-----|------|
+| **下载速度** | 约2个文件/分钟 (遵守SEC速率限制) |
+| **解析速度** | 约10,000条记录/秒 |
+| **内存占用** | 50,000条记录约500MB |
+| **文件大小** | Parquet(~15MB), CSV(~60MB) - 50,000条记录 |
 
 ---
 
-## Development
+## 开发
 
-### Testing
+### 测试
 
 ```bash
-# Run tests
+# 运行测试
 python -m pytest tests/
 
-# Run with coverage
+# 运行并生成覆盖率报告
 python -m pytest --cov=src tests/
 ```
 
-### Code Quality
+### 代码质量
 
 ```bash
-# Type checking
+# 类型检查
 mypy src/
 
-# Linting
+# 代码检查
 flake8 src/ --max-line-length=100
 
-# Code formatting
+# 代码格式化
 black src/
 ```
 
-### Building Package
+### 构建包
 
 ```bash
-# Build distribution
+# 构建分发文件
 python setup.py sdist bdist_wheel
 
-# Install locally in development mode
+# 本地开发模式安装
 pip install -e .
 ```
 
 ---
 
-## API Reference
+## API参考
 
-For detailed API documentation, see individual module docstrings:
+详细的API文档请查看各模块的docstring：
 
 ```python
 from src.sec_edgar.downloader import SECDownloader
@@ -323,59 +323,59 @@ from src.sec_edgar.parser import SECIndexParser
 from src.sec_edgar.processor import DataProcessor
 ```
 
-Comprehensive API docs available in [USAGE.md](USAGE.md#api-reference).
+完整的API文档见 [USAGE.md](USAGE.md#api-reference)。
 
 ---
 
-## Legal & Data Source
+## 法律声明及数据来源
 
-- **Data Source**: [SEC EDGAR Database](https://www.sec.gov/cgi-bin/browse-edgar)
-- **User Agreement**: This tool complies with SEC's robots.txt and rate limiting guidelines
-- **Rate Limiting**: Default 0.2 second delay between requests
-- **User-Agent**: Clearly identifies this educational tool
+- **数据来源**: [SEC EDGAR数据库](https://www.sec.gov/cgi-bin/browse-edgar)
+- **使用协议**: 本工具遵守SEC的robots.txt和速率限制指南
+- **速率限制**: 默认请求间隔为0.2秒
+- **用户代理**: 清晰标识为教育用途
 
-The SEC EDGAR database is public and free to use. Filings are official SEC documents.
-
----
-
-## Troubleshooting
-
-### Common Issues
-
-**Issue**: Network timeout errors
-- **Solution**: Increase timeout in config.py or check SEC service status
-
-**Issue**: File already exists
-- **Solution**: Output files are timestamped; previous files are preserved
-
-**Issue**: Memory error with large datasets
-- **Solution**: Process year-by-year; use CSV instead of loading all in memory
-
-See [USAGE.md](USAGE.md#troubleshooting) for more solutions.
+SEC EDGAR数据库是公开且免费使用的。所有财报都是SEC的官方文件。
 
 ---
 
-## Contributing
+## 故障排查
 
-Contributions welcome! Please:
+### 常见问题
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+**问题**: 网络超时错误
+- **解决**: 在config.py中增加超时时间或检查SEC服务状态
+
+**问题**: 文件已存在
+- **解决**: 输出文件带时间戳；之前的文件会被保留
+
+**问题**: 大数据集内存错误
+- **解决**: 逐年处理；使用CSV代替一次加载全部
+
+更多解决方案见 [USAGE.md](USAGE.md#troubleshooting)。
 
 ---
 
-## License
+## 贡献指南
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
+欢迎贡献！请按以下步骤：
+
+1. Fork本仓库
+2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 开启Pull Request
 
 ---
 
-## Citation
+## 许可证
 
-If you use this data in research or publication, please cite the SEC EDGAR source:
+本项目采用MIT许可证 - 详见 [LICENSE](LICENSE) 文件。
+
+---
+
+## 引用
+
+如在研究或出版中使用本数据，请引用SEC EDGAR数据源：
 
 ```bibtex
 @dataset{sec_edgar_2024,
@@ -388,24 +388,24 @@ If you use this data in research or publication, please cite the SEC EDGAR sourc
 
 ---
 
-## Changelog
+## 版本历史
 
-See [CHANGELOG.md](CHANGELOG.md) for version history and updates.
+详见 [CHANGELOG.md](CHANGELOG.md) 了解版本历史和更新。
 
 ---
 
-## Contact
+## 联系方式
 
-**Author**: Alex Wang  
-**Email**: wangjle9@mail2.sysu.edu.cn  
+**作者**: Alex Wang  
+**邮箱**: wangjle9@mail2.sysu.edu.cn  
 **GitHub**: [@Alex-Wang66](https://github.com/Alex-Wang66)
 
 ---
 
 <div align="center">
 
-Made with ❤️ for financial data enthusiasts
+用 ❤️ 为金融数据爱好者打造
 
-⭐ If you found this useful, please consider starring this repository!
+⭐ 如果对你有帮助，请考虑给本仓库点个Star!
 
 </div>
